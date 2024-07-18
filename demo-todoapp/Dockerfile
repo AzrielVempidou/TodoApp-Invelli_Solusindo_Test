@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM maven:3.8.4-openjdk-11-slim AS build
+FROM maven:3.8.4-openjdk-17-slim AS build
 
 WORKDIR /app
 
@@ -14,7 +14,7 @@ RUN chmod +x mvnw
 RUN ./mvnw -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
 
 # Stage 2: Run the application
-FROM openjdk:11.0.12-jre-slim
+FROM openjdk:17.0.2-jre-slim
 
 WORKDIR /app
 
