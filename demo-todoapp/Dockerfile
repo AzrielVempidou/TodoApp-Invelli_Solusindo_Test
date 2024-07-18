@@ -4,14 +4,16 @@ FROM maven:3.8.4-openjdk-11-slim AS build
 WORKDIR /app
 
 # Copying necessary files
-COPY demo-todoapp/pom.xml .
+COPY demo-todoapp/pom.xml ./
 COPY demo-todoapp/src ./src/
+COPY demo-todoapp/mvnw ./
+COPY demo-todoapp/.mvn .mvn/
 
 # Ensure mvnw is executable
-RUN chmod +x ./mvnw
+RUN chmod +x mvnw
 
 # Clean, install dependencies, and package
-RUN ./mvnw -B -DskipTests clean install
+RUN --mount=type=cache,id=maven-repo,target=/root/.m2/repository ./mvnw -X -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
 
 # Stage 2: Run the application
 FROM openjdk:11.0.12-jre-slim
