@@ -7,8 +7,11 @@ WORKDIR /app
 COPY demo-todoapp/pom.xml .
 COPY demo-todoapp/src ./src/
 
-# Build the application
-RUN mvn clean package -DskipTests
+# Ensure mvnw is executable
+RUN chmod +x mvnw
+
+# Clean, install dependencies, and package
+RUN ./mvnw -DoutputFile=target/mvn-dependency-list.log -B -DskipTests clean dependency:list install
 
 # Stage 2: Run the application
 FROM openjdk:11.0.12-jre-slim
